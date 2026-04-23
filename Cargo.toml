@@ -1,10 +1,10 @@
 [package]
-name = "app_error"
+name = "minimer"
 version = "1.0.0"
 edition = "2024"
 license = "MIT"
 description = "A simple error manager"
-repository = "https://github.com/zacharysiegel/app_error"
+repository = "https://github.com/zacharysiegel/minimer"
 readme = "./readme.md"
 keywords = ["error"]
 categories = ["rust-patterns"]
