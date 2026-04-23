@@ -3,5 +3,5 @@
 version = 4
 
 [[package]]
-name = "app_error"
+name = "minimer"
 version = "1.0.0"

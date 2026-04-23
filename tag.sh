@@ -7,6 +7,6 @@ fi
 
 version="$1"
 
-git tag -a -m "Release ${version}; https://crates.io/crates/app_error/${version}" "${version}"
+git tag -a -m "Release ${version}; https://crates.io/crates/minimer/${version}" "${version}"
 git push --tag
 

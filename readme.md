@@ -1,8 +1,8 @@
-# app_error &emsp; [![Latest Version]][crates.io]
+# minimer &emsp; [![Latest Version]][crates.io]
 
-[Latest Version]: https://img.shields.io/crates/v/app_error.svg
+[Latest Version]: https://img.shields.io/crates/v/minimer.svg
 
-[crates.io]: https://crates.io/crates/app_error
+[crates.io]: https://crates.io/crates/minimer
 
 _A simple error manager._
 
@@ -10,10 +10,10 @@ Manage Rust errors minimally.
 
 ## Usage
 
-### Add `app_error` to your Cargo dependencies
+### Add `minimer` to your Cargo dependencies
 
     [dependencies]
-	app_error = { version = "1.0" }
+	minimer = { version = "1.0" }
 
 ## Versioning
 
