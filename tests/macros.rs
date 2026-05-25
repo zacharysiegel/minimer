@@ -4,13 +4,10 @@
 
 use std::error::Error;
 
-use minimer::{define_app_error, define_app_error_static, impl_from_error};
+use minimer::{define_app_error, define_app_error_static};
 
 define_app_error!(pub MyAppError);
 define_app_error_static!(pub MyAppErrorStatic);
-
-impl_from_error!(MyAppError, std::env::VarError);
-impl_from_error!(MyAppErrorStatic, std::env::VarError);
 
 #[test]
 fn newtype_constructors_work() {
@@ -63,4 +60,29 @@ fn static_newtype_implements_error_trait() {
 fn deref_to_inner_app_error_works() {
     let err: MyAppError = MyAppError::new("deref test");
     let _message: &String = &err.message;
+}
+
+#[test]
+fn parse_int_error_question_mark_works() {
+    fn try_parse() -> Result<u64, MyAppError> {
+        Ok("not a number".parse::<u64>()?)
+    }
+    assert!(try_parse().is_err());
+}
+
+#[test]
+fn io_error_question_mark_works() {
+    fn try_read() -> Result<String, MyAppError> {
+        Ok(std::fs::read_to_string("/nonexistent/path/birzl")?)
+    }
+    assert!(try_read().is_err());
+}
+
+#[test]
+fn utf8_error_question_mark_works() {
+    fn try_decode() -> Result<String, MyAppError> {
+        let bytes: &[u8] = &[0xff, 0xfe, 0xfd];
+        Ok(std::str::from_utf8(bytes)?.to_string())
+    }
+    assert!(try_decode().is_err());
 }

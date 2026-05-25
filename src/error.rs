@@ -1,7 +1,7 @@
 use std::backtrace::{Backtrace, BacktraceStatus};
 use std::error::Error;
 use std::fmt::{Debug, Display, Formatter};
-use std::{fmt, io, string, num, array};
+use std::fmt;
 
 /// Implements `From<$error_type>` for `$target`. The target must implement
 /// `From<$crate::AppError>` (which `AppError`, `AppErrorStatic`, and any
@@ -88,6 +88,15 @@ macro_rules! define_app_error {
                 Self($crate::AppError::from(message))
             }
         }
+
+        $crate::impl_from_error!($name, ::std::io::Error);
+        $crate::impl_from_error!($name, ::std::array::TryFromSliceError);
+        $crate::impl_from_error!($name, ::std::num::TryFromIntError);
+        $crate::impl_from_error!($name, ::std::string::FromUtf8Error);
+        $crate::impl_from_error!($name, ::std::env::VarError);
+        $crate::impl_from_error!($name, ::std::num::ParseIntError);
+        $crate::impl_from_error!($name, ::std::num::ParseFloatError);
+        $crate::impl_from_error!($name, ::std::str::Utf8Error);
     };
 }
 
@@ -151,6 +160,15 @@ macro_rules! define_app_error_static {
                 Self($crate::AppErrorStatic::from(message))
             }
         }
+
+        $crate::impl_from_error!($name, ::std::io::Error);
+        $crate::impl_from_error!($name, ::std::array::TryFromSliceError);
+        $crate::impl_from_error!($name, ::std::num::TryFromIntError);
+        $crate::impl_from_error!($name, ::std::string::FromUtf8Error);
+        $crate::impl_from_error!($name, ::std::env::VarError);
+        $crate::impl_from_error!($name, ::std::num::ParseIntError);
+        $crate::impl_from_error!($name, ::std::num::ParseFloatError);
+        $crate::impl_from_error!($name, ::std::str::Utf8Error);
     };
 }
 
@@ -300,12 +318,3 @@ impl AppErrorStatic {
         }
     }
 }
-
-impl_from_error!(AppError, io::Error);
-impl_from_error!(AppErrorStatic, io::Error);
-impl_from_error!(AppError, array::TryFromSliceError);
-impl_from_error!(AppErrorStatic, array::TryFromSliceError);
-impl_from_error!(AppError, num::TryFromIntError);
-impl_from_error!(AppErrorStatic, num::TryFromIntError);
-impl_from_error!(AppError, string::FromUtf8Error);
-impl_from_error!(AppErrorStatic, string::FromUtf8Error);
