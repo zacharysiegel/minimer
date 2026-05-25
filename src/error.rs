@@ -3,23 +3,6 @@ use std::error::Error;
 use std::fmt::{Debug, Display, Formatter};
 use std::{fmt, io, string, num, array};
 
-#[macro_export]
-macro_rules! impl_from_error {
-    ($error_type:ty) => {
-        impl From<$error_type> for $crate::AppError {
-            fn from(value: $error_type) -> Self {
-                Self::from_error_default(::std::boxed::Box::new(value))
-            }
-        }
-
-        impl From<$error_type> for $crate::AppErrorStatic {
-            fn from(value: $error_type) -> Self {
-                Self::new(&value.to_string())
-            }
-        }
-    };
-}
-
 /// Should be initialized lazily (e.g. [Option::ok_or_else]) for captured backtraces to make sense.
 pub struct AppError {
     pub message: String,
@@ -62,6 +45,18 @@ impl From<AppErrorStatic> for AppError {
             sub_error: None,
             backtrace: value.backtrace,
         }
+    }
+}
+
+impl From<String> for AppError {
+    fn from(message: String) -> Self {
+        Self::new(&message)
+    }
+}
+
+impl From<&str> for AppError {
+    fn from(message: &str) -> Self {
+        Self::new(message)
     }
 }
 
@@ -131,6 +126,18 @@ impl From<AppError> for AppErrorStatic {
     }
 }
 
+impl From<String> for AppErrorStatic {
+    fn from(message: String) -> Self {
+        Self::new(&message)
+    }
+}
+
+impl From<&str> for AppErrorStatic {
+    fn from(message: &str) -> Self {
+        Self::new(message)
+    }
+}
+
 impl AppErrorStatic {
     const DEFAULT_MESSAGE: &'static str = "unspecified";
 
@@ -142,9 +149,3 @@ impl AppErrorStatic {
         }
     }
 }
-
-impl_from_error!(io::Error);
-impl_from_error!(array::TryFromSliceError);
-impl_from_error!(num::TryFromIntError);
-impl_from_error!(string::FromUtf8Error);
-
