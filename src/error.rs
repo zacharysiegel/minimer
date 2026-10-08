@@ -286,13 +286,33 @@ impl Debug for AppErrorStatic {
     }
 }
 
+/// The sub error cannot cross into [AppErrorStatic], so its chain of sources is kept as text in the message.
 impl From<AppError> for AppErrorStatic {
     fn from(value: AppError) -> Self {
+        let message: String = match value.sub_error {
+            Some(sub_error) => format!("{} -> {}", value.message, render_source_chain(sub_error.as_ref())),
+            None => value.message,
+        };
+
         AppErrorStatic {
-            message: value.message,
+            message,
             backtrace: value.backtrace,
         }
     }
+}
+
+/// `error` followed by each of its sources, separated by ` -> `.
+fn render_source_chain(error: &dyn Error) -> String {
+    let mut rendered: String = error.to_string();
+    let mut next: Option<&dyn Error> = error.source();
+
+    while let Some(source) = next {
+        rendered.push_str(" -> ");
+        rendered.push_str(&source.to_string());
+        next = source.source();
+    }
+
+    rendered
 }
 
 impl From<String> for AppErrorStatic {
